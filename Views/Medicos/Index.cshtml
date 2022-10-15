@@ -1,3 +1,5 @@
+@model IEnumerable<SisMed.ViewModels.Medicos.ListarMedicoViewModel>
+
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -21,6 +23,16 @@
                                 <th style="width: 40px;"></th>
                             </tr>
                         </thead>
+                        <tbody>
+                            @foreach (var m in Model)
+                            {
+                                <tr>
+                                    <td>@m.CRM</td>
+                                    <td>@m.Nome</td>
+                                    <td></td>
+                                </tr>
+                            }
+                        </tbody>
                     </table>
                 </div>
             </div>
