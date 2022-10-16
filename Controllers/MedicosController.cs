@@ -108,5 +108,22 @@ namespace SisMed.Controllers
 
             return NotFound();
         }
+        
+        public IActionResult Excluir(int id)
+        {
+            var medico = _context.Medicos.Find(id);
+
+            if(medico != null)
+            {
+                return View(new ListarMedicoViewModel
+                {
+                    Id = medico.Id,
+                    CRM = medico.CRM,
+                    Nome = medico.Nome
+                });
+            }
+
+            return NotFound();
+        }
     }
 }
