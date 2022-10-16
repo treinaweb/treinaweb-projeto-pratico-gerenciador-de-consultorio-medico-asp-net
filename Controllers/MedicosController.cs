@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SisMed.Models.Contexts;
+using SisMed.Models.Entities;
 using SisMed.ViewModels.Medicos;
 
 namespace SisMed.Controllers
@@ -33,6 +34,22 @@ namespace SisMed.Controllers
         public IActionResult Adicionar()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Adicionar(AdicionarMedicoViewModel dados)
+        {
+            var medico = new Medico
+            {
+                CRM = dados.CRM,
+                Nome = dados.Nome
+            };
+
+            _context.Medicos.Add(medico);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
