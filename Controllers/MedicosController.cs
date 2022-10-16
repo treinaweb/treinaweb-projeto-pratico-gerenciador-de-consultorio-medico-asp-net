@@ -80,5 +80,23 @@ namespace SisMed.Controllers
 
             return NotFound();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Editar(int id, EditarMedicoViewModel dados)
+        {           
+            var medico = _context.Medicos.Find(id);
+
+            if(medico != null)
+            {
+                medico.CRM = dados.CRM;
+                medico.Nome = dados.Nome;
+                _context.Medicos.Update(medico);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return NotFound();
+        }
     }
 }
