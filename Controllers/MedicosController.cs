@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using SisMed.Models.Contexts;
 using SisMed.Models.Entities;
@@ -8,11 +10,13 @@ namespace SisMed.Controllers
     public class MedicosController : Controller
     {
         private readonly SisMedContext _context;
+        private readonly IValidator<AdicionarMedicoViewModel> _adicionarMedicoValidator;
         private const int TAMANHO_PAGINA = 10;
 
-        public MedicosController(SisMedContext context)
+        public MedicosController(SisMedContext context, IValidator<AdicionarMedicoViewModel> adicionarMedicoValidator)
         {
             _context = context;
+            _adicionarMedicoValidator = adicionarMedicoValidator;
         }
 
         public IActionResult Index(string filtro, int pagina = 1)
@@ -40,8 +44,11 @@ namespace SisMed.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Adicionar(AdicionarMedicoViewModel dados)
         {
-            if (!ModelState.IsValid)
+            var validacao = _adicionarMedicoValidator.Validate(dados);
+
+            if(!validacao.IsValid)
             {
+                validacao.AddToModelState(ModelState, string.Empty);
                 return View(dados);
             }
             
