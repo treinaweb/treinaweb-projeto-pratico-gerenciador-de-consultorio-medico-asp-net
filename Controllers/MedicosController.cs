@@ -40,6 +40,11 @@ namespace SisMed.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Adicionar(AdicionarMedicoViewModel dados)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(dados);
+            }
+            
             var medico = new Medico
             {
                 CRM = dados.CRM,
