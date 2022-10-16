@@ -63,5 +63,22 @@ namespace SisMed.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult Editar(int id)
+        {
+            var medico = _context.Medicos.Find(id);
+
+            if(medico != null)
+            {
+                return View(new EditarMedicoViewModel
+                {
+                    Id = medico.Id,
+                    CRM = medico.CRM,
+                    Nome = medico.Nome
+                });
+            }
+
+            return NotFound();
+        }
     }
 }
