@@ -108,7 +108,7 @@ namespace SisMed.Controllers
 
             return NotFound();
         }
-        
+
         public IActionResult Excluir(int id)
         {
             var medico = _context.Medicos.Find(id);
@@ -121,6 +121,22 @@ namespace SisMed.Controllers
                     CRM = medico.CRM,
                     Nome = medico.Nome
                 });
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Excluir(int id, ListarMedicoViewModel dados)
+        {          
+            var medico = _context.Medicos.Find(id);
+
+            if(medico != null)
+            {
+                _context.Medicos.Remove(medico);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
             }
 
             return NotFound();
