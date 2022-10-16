@@ -9,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 builder.Services.AddDbContext<SisMedContext>();
 builder.Services.AddScoped<IValidator<AdicionarMedicoViewModel>, AdicionarMedicoValidator>();
+builder.Services.AddScoped<IValidator<EditarMedicoViewModel>, EditarMedicoValidator>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -11,12 +11,14 @@ namespace SisMed.Controllers
     {
         private readonly SisMedContext _context;
         private readonly IValidator<AdicionarMedicoViewModel> _adicionarMedicoValidator;
+        private readonly IValidator<EditarMedicoViewModel> _editarMedicoValidator;
         private const int TAMANHO_PAGINA = 10;
 
-        public MedicosController(SisMedContext context, IValidator<AdicionarMedicoViewModel> adicionarMedicoValidator)
+        public MedicosController(SisMedContext context, IValidator<AdicionarMedicoViewModel> adicionarMedicoValidator, IValidator<EditarMedicoViewModel> editarMedicoValidator)
         {
             _context = context;
             _adicionarMedicoValidator = adicionarMedicoValidator;
+            _editarMedicoValidator = editarMedicoValidator;
         }
 
         public IActionResult Index(string filtro, int pagina = 1)
@@ -84,7 +86,15 @@ namespace SisMed.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Editar(int id, EditarMedicoViewModel dados)
-        {           
+        {          
+            var validacao = _editarMedicoValidator.Validate(dados);
+
+            if(!validacao.IsValid)
+            {
+                validacao.AddToModelState(ModelState, string.Empty);
+                return View(dados);
+            }
+
             var medico = _context.Medicos.Find(id);
 
             if(medico != null)
