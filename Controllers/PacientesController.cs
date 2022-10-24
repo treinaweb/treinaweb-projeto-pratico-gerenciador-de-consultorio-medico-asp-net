@@ -1,5 +1,9 @@
+using System.Text.RegularExpressions;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using SisMed.Models.Contexts;
+using SisMed.Models.Entities;
 using SisMed.ViewModels.Pacientes;
 
 namespace SisMed.Controllers
@@ -7,11 +11,14 @@ namespace SisMed.Controllers
     public class PacientesController : Controller
     {
         private readonly SisMedContext _context;
+        private readonly IValidator<AdicionarPacienteViewModel> _adicionarPacienteValidator;
+
         private const int TAMANHO_PAGINA = 10;
 
-        public PacientesController(SisMedContext context)
+        public PacientesController(SisMedContext context, IValidator<AdicionarPacienteViewModel> adicionarPacienteValidator)
         {
             _context = context;
+            _adicionarPacienteValidator = adicionarPacienteValidator;
         }
 
         public IActionResult Index(string filtro, int pagina = 1)
@@ -33,6 +40,30 @@ namespace SisMed.Controllers
         public IActionResult Adicionar()
         {
             return View();
+        }
+
+         [HttpPost]
+        public IActionResult Adicionar(AdicionarPacienteViewModel dados)
+        {
+            var validacao = _adicionarPacienteValidator.Validate(dados);
+
+            if(!validacao.IsValid)
+            {
+                validacao.AddToModelState(ModelState, string.Empty);
+                return View(dados);
+            }
+
+            var paciente = new Paciente
+            {
+                CPF = Regex.Replace(dados.CPF, "[^0-9]", ""),
+                Nome = dados.Nome,
+                DataNascimento = dados.DataNascimento
+            };
+
+            _context.Pacientes.Add(paciente);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

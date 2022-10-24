@@ -1,7 +1,9 @@
 using FluentValidation;
 using SisMed.Models.Contexts;
 using SisMed.Validators.Medicos;
+using SisMed.Validators.Pacientes;
 using SisMed.ViewModels.Medicos;
+using SisMed.ViewModels.Pacientes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddControllersWithViews(options => options.SuppressImplicitRequ
 builder.Services.AddDbContext<SisMedContext>();
 builder.Services.AddScoped<IValidator<AdicionarMedicoViewModel>, AdicionarMedicoValidator>();
 builder.Services.AddScoped<IValidator<EditarMedicoViewModel>, EditarMedicoValidator>();
+builder.Services.AddScoped<IValidator<AdicionarPacienteViewModel>, AdicionarPacienteValidator>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
