@@ -42,7 +42,7 @@ namespace SisMed.Controllers
             return View();
         }
 
-         [HttpPost]
+        [HttpPost]
         public IActionResult Adicionar(AdicionarPacienteViewModel dados)
         {
             var validacao = _adicionarPacienteValidator.Validate(dados);
@@ -64,6 +64,24 @@ namespace SisMed.Controllers
             _context.SaveChanges();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Editar(int id)
+        {
+            var paciente = _context.Pacientes.Find(id);
+
+            if(paciente != null)
+            {
+                return View(new EditarPacienteViewModel
+                {
+                    Id = paciente.Id,
+                    CPF = paciente.CPF,
+                    Nome = paciente.Nome,
+                    DataNascimento = paciente.DataNascimento
+                });
+            }
+
+            return NotFound();
         }
     }
 }
