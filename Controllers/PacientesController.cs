@@ -74,12 +74,17 @@ namespace SisMed.Controllers
 
             if(paciente != null)
             {
+                var informacoesComplementares = _context.InformacoesComplementaresPaciente.FirstOrDefault(x => x.IdPaciente == id);
+
                 return View(new EditarPacienteViewModel
                 {
                     Id = paciente.Id,
                     CPF = paciente.CPF,
                     Nome = paciente.Nome,
-                    DataNascimento = paciente.DataNascimento
+                    DataNascimento = paciente.DataNascimento,
+                    Alergias = informacoesComplementares?.Alergias,
+                    MedicamentosEmUso = informacoesComplementares?.MedicamentosEmUso,
+                    CirurgiasRealizadas = informacoesComplementares?.CirurgiasRealizadas,
                 });
             }
 

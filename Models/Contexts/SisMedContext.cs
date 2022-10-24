@@ -14,6 +14,7 @@ namespace SisMed.Models.Contexts
         }
         public DbSet<Medico> Medicos => Set<Medico>();
         public DbSet<Paciente> Pacientes => Set<Paciente>();
+        public DbSet<InformacoesComplementaresPaciente> InformacoesComplementaresPaciente => Set<InformacoesComplementaresPaciente>();
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -24,6 +25,7 @@ namespace SisMed.Models.Contexts
         {
             modelBuilder.ApplyConfiguration(new MedicoConfiguration());
             modelBuilder.ApplyConfiguration(new PacienteConfiguration());
+            modelBuilder.ApplyConfiguration(new InformacoesComplementaresPacienteConfiguration());
         }
     }
 }
