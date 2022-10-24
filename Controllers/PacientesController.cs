@@ -131,5 +131,21 @@ namespace SisMed.Controllers
 
             return NotFound();
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Excluir(int id, EditarPacienteViewModel dados)
+        {          
+            var paciente = _context.Pacientes.Find(id);
+
+            if(paciente != null)
+            {
+                _context.Pacientes.Remove(paciente);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+
+            return NotFound();
+        }
     }
 }
