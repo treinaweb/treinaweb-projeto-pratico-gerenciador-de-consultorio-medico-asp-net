@@ -110,6 +110,21 @@ namespace SisMed.Controllers
                 paciente.CPF = Regex.Replace(dados.CPF, "[^0-9]", "");
                 paciente.Nome = dados.Nome;
                 paciente.DataNascimento = dados.DataNascimento;
+
+                var informacoesComplementares = _context.InformacoesComplementaresPaciente.FirstOrDefault(x => x.IdPaciente == id);
+
+                if(informacoesComplementares == null)
+                    informacoesComplementares = new InformacoesComplementaresPaciente();
+
+                informacoesComplementares.Alergias = dados.Alergias;
+                informacoesComplementares.MedicamentosEmUso = dados.MedicamentosEmUso;
+                informacoesComplementares.CirurgiasRealizadas = dados.CirurgiasRealizadas;
+                informacoesComplementares.IdPaciente = id;
+
+                if (informacoesComplementares.Id > 0)
+                    _context.InformacoesComplementaresPaciente.Update(informacoesComplementares);
+                else
+                    _context.InformacoesComplementaresPaciente.Add(informacoesComplementares);
                     
                 _context.Pacientes.Update(paciente);
                 _context.SaveChanges();
