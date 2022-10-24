@@ -113,5 +113,23 @@ namespace SisMed.Controllers
 
             return NotFound();
         }
+
+        public IActionResult Excluir(int id)
+        {
+            var paciente = _context.Pacientes.Find(id);
+
+            if(paciente != null)
+            {
+                return View(new EditarPacienteViewModel
+                {
+                    Id = paciente.Id,
+                    CPF = paciente.CPF,
+                    Nome = paciente.Nome,
+                    DataNascimento = paciente.DataNascimento
+                });
+            }
+
+            return NotFound();
+        }
     }
 }
