@@ -13,6 +13,8 @@ builder.Services.AddDbContext<SisMedContext>();
 builder.Services.AddScoped<IValidator<AdicionarMedicoViewModel>, AdicionarMedicoValidator>();
 builder.Services.AddScoped<IValidator<EditarMedicoViewModel>, EditarMedicoValidator>();
 builder.Services.AddScoped<IValidator<AdicionarPacienteViewModel>, AdicionarPacienteValidator>();
+builder.Services.AddScoped<IValidator<EditarPacienteViewModel>, EditarPacienteValidator>();
+
 
 var app = builder.Build();
 

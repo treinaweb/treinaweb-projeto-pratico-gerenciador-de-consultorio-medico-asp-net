@@ -12,13 +12,15 @@ namespace SisMed.Controllers
     {
         private readonly SisMedContext _context;
         private readonly IValidator<AdicionarPacienteViewModel> _adicionarPacienteValidator;
+        private readonly IValidator<EditarPacienteViewModel> _editarPacienteValidator;
 
         private const int TAMANHO_PAGINA = 10;
 
-        public PacientesController(SisMedContext context, IValidator<AdicionarPacienteViewModel> adicionarPacienteValidator)
+        public PacientesController(SisMedContext context, IValidator<AdicionarPacienteViewModel> adicionarPacienteValidator, IValidator<EditarPacienteViewModel> editarPacienteValidator)
         {
             _context = context;
             _adicionarPacienteValidator = adicionarPacienteValidator;
+            _editarPacienteValidator = editarPacienteValidator;
         }
 
         public IActionResult Index(string filtro, int pagina = 1)
@@ -79,6 +81,34 @@ namespace SisMed.Controllers
                     Nome = paciente.Nome,
                     DataNascimento = paciente.DataNascimento
                 });
+            }
+
+            return NotFound();
+        }
+
+         [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Editar(int id, EditarPacienteViewModel dados)
+        {
+            var validacao = _editarPacienteValidator.Validate(dados);
+            
+            if(!validacao.IsValid)
+            {
+                validacao.AddToModelState(ModelState, string.Empty);
+                return View(dados);
+            }
+            
+            var paciente = _context.Pacientes.Find(id);
+
+            if(paciente != null)
+            {
+                paciente.CPF = Regex.Replace(dados.CPF, "[^0-9]", "");
+                paciente.Nome = dados.Nome;
+                paciente.DataNascimento = dados.DataNascimento;
+                    
+                _context.Pacientes.Update(paciente);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
             }
 
             return NotFound();
