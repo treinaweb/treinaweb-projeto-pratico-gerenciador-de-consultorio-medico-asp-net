@@ -29,5 +29,10 @@ namespace SisMed.Controllers
             ViewBag.TotalPaginas = Math.Ceiling((decimal)medicos.Count() / TAMANHO_PAGINA);
             return View(medicos.Skip((pagina - 1) * TAMANHO_PAGINA).Take(TAMANHO_PAGINA));
         }
+
+        public IActionResult Adicionar()
+        {
+            return View();
+        }
     }
 }
