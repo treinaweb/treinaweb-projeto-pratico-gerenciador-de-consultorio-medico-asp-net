@@ -3,22 +3,27 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SisMed.Models.Contexts;
+using SisMed.Models.Entities;
 using SisMed.ViewModels.MonitoramentoPaciente;
 
 namespace SisMed.Controllers
 {
     [Route("Monitoramento")]
 
-    public class MonitoramentoPacentes : Controller
+    public class MonitoramentoPacentesController : Controller
     {
         private readonly SisMedContext _context;
+        private readonly IValidator<AdicionarMonitoramentoViewModel> _adicionarMonitoramentoValidator;
 
-        public MonitoramentoPacentes(SisMedContext context)
+        public MonitoramentoPacentesController(SisMedContext context, IValidator<AdicionarMonitoramentoViewModel> adicionarMonitoramentoValidator)
         {
             _context = context;
+            _adicionarMonitoramentoValidator = adicionarMonitoramentoValidator;
         }
 
         public IActionResult Index(int idPaciente)
@@ -42,6 +47,35 @@ namespace SisMed.Controllers
         {
             ViewBag.IdPaciente = idPaciente;
             return View();
+        }
+
+        [Route("Adicionar")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Adicionar(int idPaciente, AdicionarMonitoramentoViewModel dados)
+        {
+            var validacao = _adicionarMonitoramentoValidator.Validate(dados);
+
+            if(!validacao.IsValid)
+            {
+                validacao.AddToModelState(ModelState, string.Empty);
+                return View(dados);
+            }
+
+            var monitoramento = new MonitoramentoPaciente
+            {
+                PressaoArterial = dados.PressaoArterial,
+                SaturacaoOxigenio = dados.SaturacaoOxigenio,
+                Temperatura = dados.Temperatura,
+                FrequenciaCardiaca = dados.FrequenciaCardiaca,
+                DataAfericao = dados.DataAfericao,
+                IdPaciente = idPaciente
+            };
+
+            _context.MonitoramentoPaciente.Add(monitoramento);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index), new { idPaciente });
         }
     }
 }
