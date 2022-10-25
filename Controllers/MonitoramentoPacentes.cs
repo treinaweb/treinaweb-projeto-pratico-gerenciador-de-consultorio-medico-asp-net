@@ -36,5 +36,12 @@ namespace SisMed.Controllers
                                                                });
             return View(monitoramentos);
         }
+
+        [Route("Adicionar")]
+        public IActionResult Adicionar(int idPaciente)
+        {
+            ViewBag.IdPaciente = idPaciente;
+            return View();
+        }
     }
 }
