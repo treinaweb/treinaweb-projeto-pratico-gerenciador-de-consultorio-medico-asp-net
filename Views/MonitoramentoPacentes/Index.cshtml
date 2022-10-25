@@ -1,0 +1,58 @@
+@model IEnumerable<SisMed.ViewModels.MonitoramentoPaciente.ListarMonitoramentoViewModel>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Sinais vitais do paciente</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col text-right">
+                           <a href="/monitoramento/adicionar?idPaciente=@ViewBag.IdPaciente" class="btn btn-outline-primary btn-sm">Novo registro</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th style="width: 150px;">Data</th>
+                                <th>PA</th>
+                                <th>FC</th>
+                                <th>Temperatura</th>
+                                <th>SpO2</th>
+                                <th style="width: 40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in Model)
+                            {
+                                <tr>
+                                    <td>@m.DataAfericao.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@m.PressaoArterial</td>
+                                    <td>@m.FrequenciaCardiaca bpm</td>
+                                    <td>@m.Temperatura º</td>
+                                    <td>@m.SaturacaoOxigenio %</td>
+                                    <td>
+                                        <a href="/monitoramento/editar/@m.Id" class="btn btn-secondary btn-sm mr-1" title="Editar registro">
+                                            <span class="fas fa-edit"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
