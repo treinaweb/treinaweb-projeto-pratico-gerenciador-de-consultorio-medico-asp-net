@@ -19,11 +19,13 @@ namespace SisMed.Controllers
     {
         private readonly SisMedContext _context;
         private readonly IValidator<AdicionarMonitoramentoViewModel> _adicionarMonitoramentoValidator;
+        private readonly IValidator<EditarMonitoramentoViewModel> _editarMonitoramentoValidator;
 
-        public MonitoramentoPacentesController(SisMedContext context, IValidator<AdicionarMonitoramentoViewModel> adicionarMonitoramentoValidator)
+        public MonitoramentoPacentesController(SisMedContext context, IValidator<AdicionarMonitoramentoViewModel> adicionarMonitoramentoValidator, IValidator<EditarMonitoramentoViewModel> editarMonitoramentoValidator)
         {
             _context = context;
             _adicionarMonitoramentoValidator = adicionarMonitoramentoValidator;
+            _editarMonitoramentoValidator = editarMonitoramentoValidator;
         }
 
         public IActionResult Index(int idPaciente)
@@ -94,6 +96,36 @@ namespace SisMed.Controllers
                     FrequenciaCardiaca = monitoramento.FrequenciaCardiaca,
                     DataAfericao = monitoramento.DataAfericao
                 });
+            }
+
+            return NotFound();
+        }
+
+        [Route("Editar/{id}")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Editar(int id, EditarMonitoramentoViewModel dados)
+        {
+            var validacao = _editarMonitoramentoValidator.Validate(dados);
+            
+            if(!validacao.IsValid)
+            {
+                validacao.AddToModelState(ModelState, string.Empty);
+                return View(dados);
+            }
+            
+            var monitoramento = _context.MonitoramentoPaciente.Find(id);
+
+            if(monitoramento != null)
+            {
+                monitoramento.PressaoArterial = dados.PressaoArterial;
+                monitoramento.SaturacaoOxigenio = dados.SaturacaoOxigenio;
+                monitoramento.Temperatura = dados.Temperatura;
+                monitoramento.FrequenciaCardiaca = dados.FrequenciaCardiaca;
+                monitoramento.DataAfericao = dados.DataAfericao;
+                _context.MonitoramentoPaciente.Update(monitoramento);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index), new { monitoramento.IdPaciente });
             }
 
             return NotFound();
