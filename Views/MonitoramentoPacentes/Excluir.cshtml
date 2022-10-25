@@ -1,0 +1,56 @@
+@model SisMed.ViewModels.MonitoramentoPaciente.ListarMonitoramentoViewModel
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Excluir registro de sinais vitais</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="alert alert-danger">
+        <span class="fas fa-warning"></span>
+        Deseja realmente excluir este registro?
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form asp-action="Excluir">
+                <div class="card card-outline card-danger">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label asp-for="PressaoArterial" class="control-label"></label>
+                            <input asp-for="PressaoArterial" class="form-control" readonly>
+                            <span asp-validation-for="PressaoArterial" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Temperatura" class="control-label"></label>
+                            <input asp-for="Temperatura" class="form-control" readonly>
+                            <span asp-validation-for="Temperatura" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="FrequenciaCardiaca" class="control-label"></label>
+                            <input asp-for="FrequenciaCardiaca" class="form-control" readonly>
+                            <span asp-validation-for="FrequenciaCardiaca" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="SaturacaoOxigenio" class="control-label"></label>
+                            <input asp-for="SaturacaoOxigenio" class="form-control" readonly>
+                            <span asp-validation-for="SaturacaoOxigenio" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="DataAfericao" class="control-label"></label>
+                            <input asp-for="DataAfericao" class="form-control" readonly>
+                            <span asp-validation-for="DataAfericao" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        <button class="btn btn-danger" type="submit">Excluir</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

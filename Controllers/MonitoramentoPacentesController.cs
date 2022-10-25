@@ -130,5 +130,26 @@ namespace SisMed.Controllers
 
             return NotFound();
         }
+
+        [Route("Excluir/{id}")]
+        public IActionResult Excluir(int id)
+        {
+            var monitoramento = _context.MonitoramentoPaciente.Find(id);
+
+            if (monitoramento != null)
+            {
+                return View(new ListarMonitoramentoViewModel
+                {
+                    Id = monitoramento.Id,
+                    PressaoArterial = monitoramento.PressaoArterial,
+                    SaturacaoOxigenio = monitoramento.SaturacaoOxigenio,
+                    Temperatura = monitoramento.Temperatura,
+                    FrequenciaCardiaca = monitoramento.FrequenciaCardiaca,
+                    DataAfericao = monitoramento.DataAfericao
+                });
+            }
+
+            return NotFound();
+        }
     }
 }
