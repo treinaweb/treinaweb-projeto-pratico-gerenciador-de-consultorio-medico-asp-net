@@ -1,8 +1,10 @@
 using FluentValidation;
 using SisMed.Models.Contexts;
+using SisMed.Validators.Consultas;
 using SisMed.Validators.Medicos;
 using SisMed.Validators.MonitoramentoPaciente;
 using SisMed.Validators.Pacientes;
+using SisMed.ViewModels.Consultas;
 using SisMed.ViewModels.Medicos;
 using SisMed.ViewModels.MonitoramentoPaciente;
 using SisMed.ViewModels.Pacientes;
@@ -18,6 +20,7 @@ builder.Services.AddScoped<IValidator<AdicionarPacienteViewModel>, AdicionarPaci
 builder.Services.AddScoped<IValidator<EditarPacienteViewModel>, EditarPacienteValidator>();
 builder.Services.AddScoped<IValidator<AdicionarMonitoramentoViewModel>, AdicionarMonitoramentoValidator>();
 builder.Services.AddScoped<IValidator<EditarMonitoramentoViewModel>, EditarMonitoramentoValidator>();
+builder.Services.AddScoped<IValidator<AdicionarConsultaViewModel>, AdicionarConsultaValidator>();
 
 var app = builder.Build();
 
