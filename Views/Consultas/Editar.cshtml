@@ -1,0 +1,134 @@
+@model SisMed.ViewModels.Consultas.EditarConsultaViewModel
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Editar consulta</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <form asp-action="Editar">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label asp-for="Data" class="control-label"></label>
+                            <input asp-for="Data" class="form-control">
+                            <span asp-validation-for="Data" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Tipo" class="control-label"></label>
+                            <select asp-for="Tipo" class="form-control" asp-items="@ViewBag.TiposConsulta"></select>
+                            <span asp-validation-for="Tipo" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="IdMedico" class="control-label"></label>
+                            <select asp-for="IdMedico" class="form-control" asp-items="@ViewBag.Medicos"></select>
+                            <span asp-validation-for="IdMedico" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="IdPaciente" class="control-label"></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Buscar paciente" asp-for="NomePaciente" id="NomePaciente" readonly>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-default" id="BtnBuscarPaciente" data-toggle="modal" data-target="#ModalPacientes">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="hidden" asp-for="IdPaciente" class="form-control" id="IdPaciente">
+                            <span asp-validation-for="IdPaciente" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="card-footer text-right">
+                        <button class="btn btn-primary" type="submit">Salvar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div class="modal" tabindex="-1" role="dialog" id="ModalPacientes">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Buscar paciente
+                </h5>
+                <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Buscar paciente" id="TxtFiltro">
+                            <div class="input-group-append">
+                                <button class="btn btn-default" id="BtnBuscar">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-hover table-sm d-none" id="TbPacientes">
+                    <thead>
+                        <th style="width: 150px;">CPF</th>
+                        <th>Nome</th>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <div class="alert alert-warning d-none" id="DivMensagem">Nenhum paciente localizado.</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        function buscarPaciente() {
+            if ($("#TxtFiltro").val().trim().length > 0) {
+                $.getJSON("/pacientes/buscar?filtro="+ $("#TxtFiltro").val(), function(resultado) {
+                    if (resultado.length > 0) {
+                        var linhas = resultado.map(x => "<tr data-dismiss='modal' style='cursor: pointer;' title='Clique para selecionar' data-id='" + x.id + "'><td mask='999.999.999-99'>" + x.cpf +"</td><td>" + x.nome + "</td></tr>").join("");
+                        $("#TbPacientes tbody").html(linhas);
+                        $("td[mask]").each(function(e){
+                            $(this).mask($(this).attr("mask"));
+                        });
+                        $("#TbPacientes tbody tr").click(function(){
+                            var id = $(this).attr("data-id");
+                            var nome = $(this).children()[1].innerText;
+                            $("#IdPaciente").val(id);
+                            $("#NomePaciente").val(nome);
+                        });
+                        $("#TbPacientes").removeClass("d-none");
+                        $("#DivMensagem").addClass("d-none");
+                    }
+                    else {
+                        $("#TbPacientes").addClass("d-none");
+                        $("#DivMensagem").removeClass("d-none");
+                    }
+                });
+            }
+        }
+
+        $("#TxtFiltro").keyup(function(e){
+            if (e.keyCode === 13) {
+                buscarPaciente();
+            }
+        });
+
+        $("#BtnBuscar").click(function(){
+            buscarPaciente();
+        });
+    </script>
+}

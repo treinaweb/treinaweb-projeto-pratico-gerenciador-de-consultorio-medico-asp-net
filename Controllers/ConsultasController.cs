@@ -82,5 +82,31 @@ namespace SisMed.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult Editar(int id)
+        {
+            var consulta = _context.Consultas.Include(x => x.Paciente)
+                                             .FirstOrDefault(x => x.Id == id);
+            
+            if (consulta != null)
+            {
+                ViewBag.TiposConsulta = new [] {
+                    new SelectListItem { Text = "Eletiva", Value = TipoConsulta.Eletiva.ToString() },
+                    new SelectListItem { Text = "Urgência", Value = TipoConsulta.Urgencia.ToString() }
+                };
+                ViewBag.Medicos = _context.Medicos.OrderBy(x => x.Nome).Select(x => new SelectListItem { Text = x.Nome, Value = x.Id.ToString() });
+
+                return View(new EditarConsultaViewModel
+                {
+                   IdMedico = consulta.IdMedico,
+                   IdPaciente = consulta.IdPaciente,
+                   NomePaciente = consulta.Paciente.Nome,
+                   Data = consulta.Data,
+                   Tipo = consulta.Tipo 
+                });
+            }
+
+            return NotFound();
+        }
     }
 }
