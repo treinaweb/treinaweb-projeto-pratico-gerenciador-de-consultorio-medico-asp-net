@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SisMed.Models.Contexts;
 
@@ -11,9 +12,10 @@ using SisMed.Models.Contexts;
 namespace SisMed.Migrations
 {
     [DbContext(typeof(SisMedContext))]
-    partial class SisMedContextModelSnapshot : ModelSnapshot
+    [Migration("20221030000027_EntidadeConsulta")]
+    partial class EntidadeConsulta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
