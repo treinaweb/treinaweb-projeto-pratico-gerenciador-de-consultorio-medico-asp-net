@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SisMed.Models.Contexts;
 using SisMed.Models.Enums;
@@ -33,6 +34,16 @@ namespace SisMed.Controllers
             ViewBag.TotalPaginas = Math.Ceiling((decimal)consultas.Count() / TAMANHO_PAGINA);
 
             return View(consultas.Skip((pagina - 1) * TAMANHO_PAGINA).Take(TAMANHO_PAGINA));
+        }
+
+        public IActionResult Adicionar()
+        {
+            ViewBag.TiposConsulta = new [] {
+                new SelectListItem { Text = "Eletiva", Value = TipoConsulta.Eletiva.ToString() },
+                new SelectListItem { Text = "Urgência", Value = TipoConsulta.Urgencia.ToString() }
+            };
+            ViewBag.Medicos = _context.Medicos.OrderBy(x => x.Nome).Select(x => new SelectListItem { Text = x.Nome, Value = x.Id.ToString() });
+            return View();
         }
     }
 }
