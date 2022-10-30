@@ -167,5 +167,18 @@ namespace SisMed.Controllers
 
             return NotFound();
         }
+
+        public IActionResult Buscar(string filtro)
+        {
+            var pacientes = _context.Pacientes.Where(x => x.Nome.Contains(filtro) || x.CPF.Contains(filtro))
+                                              .Take(10)
+                                              .Select(x => new ListarPacienteViewModel
+                                              {
+                                                Id = x.Id,
+                                                Nome = x.Nome,
+                                                CPF = x.CPF
+                                              });
+            return Json(pacientes);
+        }
     }
 }

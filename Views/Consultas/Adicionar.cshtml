@@ -92,4 +92,44 @@
         </div>
     </div>
 </div>
+
+@section scripts {
+    <script>
+        function buscarPaciente() {
+            if ($("#TxtFiltro").val().trim().length > 0) {
+                $.getJSON("/pacientes/buscar?filtro="+ $("#TxtFiltro").val(), function(resultado) {
+                    if (resultado.length > 0) {
+                        var linhas = resultado.map(x => "<tr data-dismiss='modal' style='cursor: pointer;' title='Clique para selecionar' data-id='" + x.id + "'><td mask='999.999.999-99'>" + x.cpf +"</td><td>" + x.nome + "</td></tr>").join("");
+                        $("#TbPacientes tbody").html(linhas);
+                        $("td[mask]").each(function(e){
+                            $(this).mask($(this).attr("mask"));
+                        });
+                        $("#TbPacientes tbody tr").click(function(){
+                            var id = $(this).attr("data-id");
+                            var nome = $(this).children()[1].innerText;
+                            $("#IdPaciente").val(id);
+                            $("#NomePaciente").val(nome);
+                        });
+                        $("#TbPacientes").removeClass("d-none");
+                        $("#DivMensagem").addClass("d-none");
+                    }
+                    else {
+                        $("#TbPacientes").addClass("d-none");
+                        $("#DivMensagem").removeClass("d-none");
+                    }
+                });
+            }
+        }
+
+        $("#TxtFiltro").keyup(function(e){
+            if (e.keyCode === 13) {
+                buscarPaciente();
+            }
+        });
+
+        $("#BtnBuscar").click(function(){
+            buscarPaciente();
+        });
+    </script>
 }
+
