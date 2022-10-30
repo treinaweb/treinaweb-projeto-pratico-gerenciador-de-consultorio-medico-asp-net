@@ -31,6 +31,19 @@
                             <select asp-for="IdMedico" class="form-control" asp-items="@ViewBag.Medicos"></select>
                             <span asp-validation-for="IdMedico" class="text-danger"></span>
                         </div>
+                        <div class="form-group">
+                            <label asp-for="IdPaciente" class="control-label"></label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Buscar paciente" id="NomePaciente" readonly>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-default" id="BtnBuscarPaciente" data-toggle="modal" data-target="#ModalPacientes">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <input type="hidden" asp-for="IdPaciente" class="form-control" id="IdPaciente">
+                            <span asp-validation-for="IdPaciente" class="text-danger"></span>
+                        </div>
                     </div>
                     <div class="card-footer text-right">
                         <button class="btn btn-primary" type="submit">Salvar</button>
@@ -40,4 +53,43 @@
         </div>
     </div>
 </section>
+
+<div class="modal" tabindex="-1" role="dialog" id="ModalPacientes">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Buscar paciente
+                </h5>
+                <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Buscar paciente" id="TxtFiltro">
+                            <div class="input-group-append">
+                                <button class="btn btn-default" id="BtnBuscar">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-hover table-sm d-none" id="TbPacientes">
+                    <thead>
+                        <th style="width: 150px;">CPF</th>
+                        <th>Nome</th>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+                <div class="alert alert-warning d-none" id="DivMensagem">Nenhum paciente localizado.</div>
+            </div>
+        </div>
+    </div>
+</div>
 }
