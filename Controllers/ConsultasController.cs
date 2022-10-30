@@ -14,13 +14,14 @@ namespace SisMed.Controllers
     {
         private readonly SisMedContext _context;
         private readonly IValidator<AdicionarConsultaViewModel> _adicionarConsultaValidator;
-
+        private readonly IValidator<EditarConsultaViewModel> _editararConsultaValidator;
         private const int TAMANHO_PAGINA = 10;
 
-        public ConsultasController(SisMedContext context, IValidator<AdicionarConsultaViewModel> adicionarConsultaValidator)
+        public ConsultasController(SisMedContext context, IValidator<AdicionarConsultaViewModel> adicionarConsultaValidator, IValidator<EditarConsultaViewModel> editararConsultaValidator)
         {
             _context = context;
             _adicionarConsultaValidator = adicionarConsultaValidator;
+            _editararConsultaValidator = editararConsultaValidator;
         }
 
         public IActionResult Index(string filtro, int pagina = 1)
@@ -104,6 +105,39 @@ namespace SisMed.Controllers
                    Data = consulta.Data,
                    Tipo = consulta.Tipo 
                 });
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Editar(int id, EditarConsultaViewModel dados)
+        {
+            var validacao = _editararConsultaValidator.Validate(dados);
+            
+            if(!validacao.IsValid)
+            {
+                ViewBag.TiposConsulta = new [] {
+                    new SelectListItem { Text = "Eletiva", Value = TipoConsulta.Eletiva.ToString() },
+                    new SelectListItem { Text = "Urgência", Value = TipoConsulta.Urgencia.ToString() }
+                };
+                ViewBag.Medicos = _context.Medicos.OrderBy(x => x.Nome).Select(x => new SelectListItem { Text = x.Nome, Value = x.Id.ToString() });
+                validacao.AddToModelState(ModelState, string.Empty);
+                return View(dados);
+            }
+            
+            var consulta = _context.Consultas.Find(id);
+
+            if(consulta != null)
+            {
+                consulta.Data = dados.Data;
+                consulta.IdPaciente = dados.IdPaciente;
+                consulta.IdMedico = dados.IdMedico;
+                consulta.Tipo = dados.Tipo;
+                _context.Consultas.Update(consulta);
+                _context.SaveChanges();
+                return RedirectToAction(nameof(Index));
             }
 
             return NotFound();
