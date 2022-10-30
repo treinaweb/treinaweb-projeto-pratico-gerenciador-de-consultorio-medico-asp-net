@@ -1,0 +1,88 @@
+@model IEnumerable<SisMed.ViewModels.Consultas.ListarConsultaViewModel>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Consultas</h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between">
+                        <form asp-action="Index">
+                            <div class="input-group input-group-sm" style="width: 300px;">
+                                <input type="text" class="form-control" placeholder="Buscar consulta" name="filtro" value="@ViewBag.Filtro">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <a href="/consultas/adicionar" class="btn btn-outline-primary btn-sm">Nova consulta</a>
+                    </div>
+                </div>
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-head-fixed text-nowrap">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;">Data</th>
+                                <th>Paciente</th>
+                                <th>Médico</th>
+                                <th style="width: 40px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in Model)
+                            {
+                                <tr>
+                                    <td>@c.Data.ToString("dd/MM/yyyy")</td>
+                                    <td>@c.Paciente</td>
+                                    <td>@c.Medico</td>
+                                    <td>
+                                        <a href="/consultas/editar/@c.Id" class="btn btn-secondary btn-sm mr-1" title="Editar consulta">
+                                            <span class="fas fa-edit"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer clearfix">
+                    @if(ViewBag.TotalPaginas > 0)
+                    {
+                        <ul class="pagination pagination-sm m-0 float-right">
+                        @if(ViewBag.NumeroPagina > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "Consultas", new { Filtro = @ViewBag.Filtro, Pagina = @ViewBag.NumeroPagina - 1 })">
+                                    &laquo;
+                                </a>
+                            </li>
+                        }
+                        <li class="page-item page-link">Página @ViewBag.NumeroPagina de @ViewBag.TotalPaginas</li>
+                        @if(ViewBag.NumeroPagina < @ViewBag.TotalPaginas)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", "Consultas", new { Filtro = @ViewBag.Filtro, Pagina = @ViewBag.NumeroPagina + 1 })">
+                                    &raquo;
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
